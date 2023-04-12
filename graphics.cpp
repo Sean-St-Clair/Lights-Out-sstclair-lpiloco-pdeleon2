@@ -13,11 +13,15 @@ Screen visual;
 GLdouble width, height;
 int wd;
 
+// Colors
+color grey(.5, .5, .5);
+color yellow(1, 1, 0);
+
 // Game variables
 Rect user;
 
 // Board
-vector<vector<int>> gameBoard;
+vector<vector<Rect>> gameBoard;
 
 void initUser() {
     // Initialize the user to be a 20x20 white block
@@ -26,9 +30,27 @@ void initUser() {
     user = Rect(color(1, 1, 1), 20, 20, userDim);
 }
 
+// Creates a 5x5 square grid centered using the width and height of the screen
 void initBoard() {
-    for (int i = 0; i < 5; ++i) {
-        gameBoard.push_back({0, 0, 0, 0, 0});
+    int squareSize = width / 6;
+    int marginSize = squareSize / 4;
+    squareSize -= marginSize;
+    int boardX = (width - (squareSize + marginSize) * 4) / 2;
+    int boardY = (height - (squareSize + marginSize) * 4) / 2;
+    int squareX = boardX;
+    int squareY = boardY;
+
+    // Populate the 2D game board vector
+    vector<Rect> row;
+    for (int y = 0; y < 5; ++y) {
+        row.clear();
+        squareX = boardX;
+        for (int x = 0; x < 5; ++x) {
+            row.push_back(Rect(yellow, squareX, squareY, dimensions(squareSize, squareSize)));
+            squareX += squareSize + marginSize;
+        }
+        squareY += squareSize + marginSize;
+        gameBoard.push_back(row);
     }
 }
 
@@ -44,6 +66,15 @@ void init() {
 void initGL() {
     // Set "clearing" or background color
     glClearColor(0, 0, 0, 1.0f);
+}
+
+// TODO: good comments
+void drawBoard() {
+    for (vector<Rect> &row: gameBoard) {
+        for (Rect &r: row) {
+            r.draw();
+        }
+    }
 }
 
 /* Handler for window-repaint event. Call back when the window first appears and
@@ -80,7 +111,9 @@ void display() {
     if (visual = middleScreen) {
         // DRAW THE GAME IN HERE
 
-        user.draw();
+    drawBoard();
+
+    user.draw();
 
 
         // win condition: if loop that switches it to the endScreen
