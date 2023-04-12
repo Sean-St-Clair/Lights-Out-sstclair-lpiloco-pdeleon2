@@ -30,21 +30,23 @@ chrono::steady_clock::time_point startTime, endTime;
 
 // Creates a 5x5 square grid centered using the width and height of the screen
 void initBoard() {
-    int squareSize = width / 6;
-    int marginSize = squareSize / 4;
+    double squareSize = width / 6;
+    double marginSize = squareSize / 4;
     squareSize -= marginSize;
-    int boardX = (width - (squareSize + marginSize) * 4) / 2;
-    int boardY = (height - (squareSize + marginSize) * 4) / 2;
-    int squareX = boardX;
-    int squareY = boardY;
+    double boardX = (width - (squareSize + marginSize) * 4) / 2;
+    double boardY = (height - (squareSize + marginSize) * 4) / 2;
+    double squareX = boardX;
+    double squareY = boardY;
 
     // Populate the 2D game board vector
     vector<Rect> row;
+    color squareColor;
     for (int y = 0; y < boardHeight; ++y) {
         row.clear();
         squareX = boardX;
         for (int x = 0; x < boardWidth; ++x) {
-            row.push_back(Rect(yellow, squareX, squareY, dimensions(squareSize, squareSize)));
+            squareColor = rand() % 2 == 0 ? yellow : grey;
+            row.push_back(Rect(squareColor, squareX, squareY, dimensions(squareSize, squareSize)));
             squareX += squareSize + marginSize;
         }
         squareY += squareSize + marginSize;
@@ -67,7 +69,7 @@ void initGL() {
     glClearColor(0, 0, 0, 1.0f);
 }
 
-// TODO: good comments
+// Draws each rectangle of the game board
 void drawBoard() {
     for (vector<Rect> &row: gameBoard) {
         for (Rect &r: row) {
@@ -99,12 +101,25 @@ void display() {
 
     if (visual == startScreen) {
         //Save the start screen message, then print it
-        string message = "The object of the game is to ensure all lights are off. Turning a light off or"
-                         "on will switch all adjacent squares to the opposite state. Press the spacebar to"
-                         "continue";
+        string message = "The object of the game is to ensure all lights are off.";
+        string messageTwo = "Turning a light off or on will switch all adjacent squares";
+        string messageThree = "to the opposite state Press the space bar to continue";
+        string messageFour = "Press the space bar to continue.";
         glColor3f(1, 1, 1);
-        glRasterPos2i(0, 50);
+        glRasterPos2i(20, 50);
         for (const char &letter: message) {
+            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+        }
+        glRasterPos2i(20, 70);
+        for (const char &letter: messageTwo) {
+            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+        }
+        glRasterPos2i(20, 90);
+        for (const char &letter: messageThree) {
+            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+        }
+        glRasterPos2i(115, 160);
+        for (const char &letter: messageFour) {
             glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
         }
     }
@@ -147,21 +162,6 @@ void kbd(unsigned char key, int x, int y) {
 
 
 void kbdS(int key, int x, int y) {
-    switch (key) {
-        case GLUT_KEY_DOWN:
-
-            break;
-        case GLUT_KEY_LEFT:
-
-            break;
-        case GLUT_KEY_RIGHT:
-
-            break;
-        case GLUT_KEY_UP:
-
-            break;
-    }
-
     glutPostRedisplay();
 }
 
