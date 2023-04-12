@@ -19,6 +19,7 @@ struct color {
 
     /* Overloaded Operator */
     friend std::ostream& operator << (std::ostream& outs, const color &c);
+    friend std::ostream& operator == (const color &lhs, const color &rhs);
 };
 
 struct point2D {

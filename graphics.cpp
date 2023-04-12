@@ -178,9 +178,12 @@ void cursor(int x, int y) {
 // button will be GLUT_LEFT_BUTTON or GLUT_RIGHT_BUTTON
 // state will be GLUT_UP or GLUT_DOWN
 void mouse(int button, int state, int x, int y) {
-    for (Rect &r: gameBoard) {
-        if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && r.isOverlapping(x, y)) {
-            r.setColor(0.0, 0.0, 0.0, 1);
+    for (int i = 0; i < gameBoard.size(); ++i) {
+        for (int j = 0; j < gameBoard.size(); ++j){
+            if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && gameBoard[i][j].isOverlapping(x, y) && gameBoard[i][j].getColor() == yellow) {
+                gameBoard[i][j].setColor(0.0, 0.0, 0.0, 1);
+
+            }
         }
     }
     glutPostRedisplay();
