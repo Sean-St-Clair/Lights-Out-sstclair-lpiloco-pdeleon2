@@ -5,7 +5,7 @@
 #ifdef _WIN32
 #include <windows.h>
 #else
-#include <sys/time.h>
+
 #endif
 
 #ifdef __APPLE__
