@@ -144,21 +144,11 @@ void Rect::changeHeight(double delta) {
     setSize({size.width, size.height + delta});
 }
 
-bool Rect::isOverlapping(const Rect &r) const {
-    // If rectangles are overlapping, the distances between their center points will be
-    // less than their combined widths / heights along the x and y axes, respectively.
-    double sumHalfWidths = size.width / 2 + r.size.width / 2;
-    double sumHalfHeights = size.height / 2 + r.size.height / 2;
-    bool xOverlap = false;
-    bool yOverlap = false;
-    // 1. Along the x-axis
-    if (abs(center.x - r.center.x) <= sumHalfWidths) {
-        xOverlap = true;
-    }
-    // 2. Along the y-axis
-    if (abs(center.y - r.center.y) <= sumHalfHeights) {
-        yOverlap = true;
-    }
+bool Rect::isOverlapping(int x, int y) const {
+    double halfWidth = size.width / 2;
+    double halfHeight = size.height / 2;
+    bool xOverlap = abs(x - center.x) <= halfWidth;
+    bool yOverlap = abs(y - center.y) <= halfHeight;
     return (xOverlap && yOverlap);
 }
 
