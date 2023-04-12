@@ -1,4 +1,5 @@
 #include "graphics.h"
+#include "Shapes/rect.h"
 #include <iostream>
 #include <memory>
 #include <vector>
