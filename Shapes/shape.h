@@ -81,6 +81,7 @@ public:
 
     /* Setters */
     void setColor(color c);
+    void swapColor(color c1, color c2);
     void setColor(double r, double g, double b, double a);
     void setRed(double r);
     void setGreen(double g);

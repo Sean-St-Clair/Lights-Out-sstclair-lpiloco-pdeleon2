@@ -200,36 +200,19 @@ void mouse(int button, int state, int x, int y) {
 
     for (int i = 0; i < gameBoard.size(); ++i) {
         for (int j = 0; j < gameBoard.size(); ++j) {
-            if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && gameBoard[i][j].isOverlapping(x, y) &&
-                gameBoard[i][j].getColor() == yellow) {
-                gameBoard[i][j].setColor(grey);
+            if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && gameBoard[i][j].isOverlapping(x, y)) {
+                gameBoard[i][j].swapColor(grey, yellow);
                 if (i - 1 >= 0 && i - 1 <= 4) {
-                    gameBoard[i - 1][j].setColor(grey);
+                    gameBoard[i - 1][j].swapColor(grey, yellow);
                 }
                 if (i + 1 >= 0 && i + 1 <= 4) {
-                    gameBoard[i + 1][j].setColor(grey);
+                    gameBoard[i + 1][j].swapColor(grey, yellow);
                 }
                 if (j - 1 >= 0 && j - 1 <= 4) {
-                    gameBoard[i][j - 1].setColor(grey);
+                    gameBoard[i][j - 1].swapColor(grey, yellow);
                 }
                 if (j + 1 >= 0 && j + 1 <= 4) {
-                    gameBoard[i][j + 1].setColor(grey);
-                }
-
-            } else if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && gameBoard[i][j].isOverlapping(x, y) &&
-                       gameBoard[i][j].getColor() == grey) {
-                gameBoard[i][j].setColor(yellow);
-                if (i - 1 >= 0 && i - 1 <= 4) {
-                    gameBoard[i - 1][j].setColor(yellow);
-                }
-                if (i + 1 >= 0 && i + 1 <= 4) {
-                    gameBoard[i + 1][j].setColor(yellow);
-                }
-                if (j - 1 >= 0 && j - 1 <= 4) {
-                    gameBoard[i][j - 1].setColor(yellow);
-                }
-                if (j + 1 >= 0 && j + 1 <= 4) {
-                    gameBoard[i][j + 1].setColor(yellow);
+                    gameBoard[i][j + 1].swapColor(grey, yellow);
                 }
             }
         }
