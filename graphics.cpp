@@ -28,21 +28,23 @@ chrono::steady_clock::time_point startTime, endTime;
 
 // Creates a 5x5 square grid centered using the width and height of the screen
 void initBoard() {
-    int squareSize = width / 6;
-    int marginSize = squareSize / 4;
+    double squareSize = width / 6;
+    double marginSize = squareSize / 4;
     squareSize -= marginSize;
-    int boardX = (width - (squareSize + marginSize) * 4) / 2;
-    int boardY = (height - (squareSize + marginSize) * 4) / 2;
-    int squareX = boardX;
-    int squareY = boardY;
+    double boardX = (width - (squareSize + marginSize) * 4) / 2;
+    double boardY = (height - (squareSize + marginSize) * 4) / 2;
+    double squareX = boardX;
+    double squareY = boardY;
 
     // Populate the 2D game board vector
     vector<Rect> row;
+    color squareColor;
     for (int y = 0; y < 5; ++y) {
         row.clear();
         squareX = boardX;
         for (int x = 0; x < 5; ++x) {
-            row.push_back(Rect(yellow, squareX, squareY, dimensions(squareSize, squareSize)));
+            squareColor = rand() % 2 == 0 ? yellow : grey;
+            row.push_back(Rect(squareColor, squareX, squareY, dimensions(squareSize, squareSize)));
             squareX += squareSize + marginSize;
         }
         squareY += squareSize + marginSize;
@@ -65,7 +67,7 @@ void initGL() {
     glClearColor(0, 0, 0, 1.0f);
 }
 
-// TODO: good comments
+// Draws each rectangle of the game board
 void drawBoard() {
     for (vector<Rect> &row: gameBoard) {
         for (Rect &r: row) {
@@ -145,21 +147,6 @@ void kbd(unsigned char key, int x, int y) {
 
 
 void kbdS(int key, int x, int y) {
-    switch (key) {
-        case GLUT_KEY_DOWN:
-
-            break;
-        case GLUT_KEY_LEFT:
-
-            break;
-        case GLUT_KEY_RIGHT:
-
-            break;
-        case GLUT_KEY_UP:
-
-            break;
-    }
-
     glutPostRedisplay();
 }
 
