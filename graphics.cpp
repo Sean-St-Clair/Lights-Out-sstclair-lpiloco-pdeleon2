@@ -9,19 +9,14 @@ using namespace std;
 
 GLdouble width, height;
 int wd;
-const color white(1, 1, 1);
 
-Rect grass;
-vector<Rect> buildings1;
-vector<Rect> buildings2;
-vector<Rect> buildings3;
 Rect user;
 
 void initUser() {
     // Initialize the user to be a 20x20 white block
     // centered in the top left corner of the graphics window
     dimensions userDim = dimensions(20, 20);
-    user = Rect(white, 20, 20, userDim);
+    user = Rect(color(1, 1, 1), 20, 20, userDim);
 }
 
 void init() {
@@ -107,53 +102,6 @@ void mouse(int button, int state, int x, int y) {
     glutPostRedisplay();
 }
 
-void buildingTimer(int dummy) {
-    // Smallest buildings move fastest
-    for (int i = 0; i < buildings1.size(); ++i) {
-        // Move all the red buildings to the left
-        buildings1[i].moveX(-3);
-        // If a shape has moved off the screen
-        if (buildings1[i].getCenterX() < -(buildings1[i].getWidth() / 2)) {
-            // Set it to the right of the screen so that it passes through again
-            int buildingOnLeft = (i == 0) ? buildings1.size() - 1 : i - 1;
-            buildings1[i].setCenterX(
-                    buildings1[buildingOnLeft].getCenterX() + buildings1[buildingOnLeft].getWidth() / 2 +
-                    buildings1[i].getWidth() / 2 + 5);
-        }
-    }
-
-    // Medium buildings move slower
-    for (int i = 0; i < buildings2.size(); ++i) {
-        // Move all the red buildings to the left
-        buildings2[i].moveX(-2);
-        // If a shape has moved off the screen
-        if (buildings2[i].getCenterX() < -(buildings2[i].getWidth() / 2)) {
-            // Set it to the right of the screen so that it passes through again
-            int buildingOnLeft = (i == 0) ? buildings2.size() - 1 : i - 1;
-            buildings2[i].setCenterX(
-                    buildings2[buildingOnLeft].getCenterX() + buildings2[buildingOnLeft].getWidth() / 2 +
-                    buildings2[i].getWidth() / 2 + 5);
-        }
-    }
-
-    // Largest buildings move slowest
-    for (int i = 0; i < buildings3.size(); ++i) {
-        // Move all the red buildings to the left
-        buildings3[i].moveX(-1);
-        // If a shape has moved off the screen
-        if (buildings3[i].getCenterX() < -(buildings3[i].getWidth() / 2)) {
-            // Set it to the right of the screen so that it passes through again
-            int buildingOnLeft = (i == 0) ? buildings3.size() - 1 : i - 1;
-            buildings3[i].setCenterX(
-                    buildings3[buildingOnLeft].getCenterX() + buildings3[buildingOnLeft].getWidth() / 2 +
-                    buildings3[i].getWidth() / 2 + 5);
-        }
-    }
-
-    glutPostRedisplay();
-    glutTimerFunc(30, buildingTimer, dummy);
-}
-
 /* Main function: GLUT runs as a console application starting at main()  */
 int main(int argc, char **argv) {
 
@@ -186,9 +134,6 @@ int main(int argc, char **argv) {
 
     // handles mouse click
     glutMouseFunc(mouse);
-
-    // handles timer
-    glutTimerFunc(0, buildingTimer, 0);
 
     // Enter the event-processing loop
     glutMainLoop();
