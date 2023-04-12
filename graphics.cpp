@@ -9,96 +9,27 @@ using namespace std;
 
 GLdouble width, height;
 int wd;
-const color skyBlue(77 / 255.0, 213 / 255.0, 240 / 255.0);
-const color grassGreen(26 / 255.0, 176 / 255.0, 56 / 255.0);
-const color white(1, 1, 1);
-const color brickRed(201 / 255.0, 20 / 255.0, 20 / 255.0);
-const color darkBlue(1 / 255.0, 110 / 255.0, 214 / 255.0);
-const color purple(119 / 255.0, 11 / 255.0, 224 / 255.0);
-const color black(0, 0, 0);
-const color magenta(1, 0, 1);
-const color orange(1, 163 / 255.0, 22 / 255.0);
-const color cyan(0, 1, 1);
 
-Rect grass;
-vector<Rect> buildings1;
-vector<Rect> buildings2;
-vector<Rect> buildings3;
 Rect user;
-
-void initGrass() {
-    grass.setCenter(250, 450);
-    grass.setSize(width, height / 3);
-    grass.setColor(grassGreen);
-}
-
-void initBuildings() {
-    // First vector is for closest buildings
-    int totalBuildingWidth = 0;
-    dimensions buildingSize;
-    while (totalBuildingWidth < width + 50) {
-        // Building height between 50-100
-        buildingSize.height = rand() % 51 + 50;
-        // Building width between 30-50
-        buildingSize.width = rand() % 21 + 30;
-        buildings1.push_back(Rect(brickRed,
-                                  totalBuildingWidth + (buildingSize.width / 2) + 5,
-                                  height - ((buildingSize.height / 2) + 50),
-                                  buildingSize));
-        totalBuildingWidth += buildingSize.width + 5;
-    }
-
-    // Populate second set of buildings
-    totalBuildingWidth = 0;
-    while (totalBuildingWidth < width + 100) {
-        // Populate this vector of darkBlue buildings
-        // Building height between 100-200
-        buildingSize.height = rand() % 101 + 100;
-        // Building width between 50-100
-        buildingSize.width = rand() % 51 + 50;
-        buildings2.push_back(Rect(darkBlue,
-                                  totalBuildingWidth + (buildingSize.width / 2) + 5,
-                                  height - ((buildingSize.height / 2) + 50),
-                                  buildingSize));
-        totalBuildingWidth += buildingSize.width + 5; // Placeholder line to avoid infinite loop
-    }
-
-    // Populate third set of buildings
-    totalBuildingWidth = 0;
-    while (totalBuildingWidth < width + 200) {
-        // Populate this vector of purple buildings
-        // Building height between 200-400
-        buildingSize.height = rand() % 201 + 200;
-        // Building width between 100-200
-        buildingSize.width = rand() % 101 + 100;
-        buildings3.push_back(Rect(purple,
-                                  totalBuildingWidth + (buildingSize.width / 2) + 5,
-                                  height - ((buildingSize.height / 2) + 50),
-                                  buildingSize));
-        totalBuildingWidth += buildingSize.width + 5; // Placeholder line to avoid infinite loop
-    }
-}
 
 void initUser() {
     // Initialize the user to be a 20x20 white block
     // centered in the top left corner of the graphics window
     dimensions userDim = dimensions(20, 20);
-    user = Rect(white, 20, 20, userDim);
+    user = Rect(color(1, 1, 1), 20, 20, userDim);
 }
 
 void init() {
     width = 500;
     height = 500;
     srand(time(0));
-    initGrass();
-    initBuildings();
     initUser();
 }
 
 /* Initialize OpenGL Graphics */
 void initGL() {
     // Set "clearing" or background color
-    glClearColor(skyBlue.red, skyBlue.green, skyBlue.blue, 1.0f);
+    glClearColor(0, 0, 0, 1.0f);
 }
 
 /* Handler for window-repaint event. Call back when the window first appears and
@@ -121,41 +52,6 @@ void display() {
     /*
      * Draw here
      */
-
-    // Add logic to draw the grass, the user, and the
-    // rest of the buildings. Note that the order of drawing
-    // matters because whatever is drawn last appears on top.
-    // Note that darkBlue buildings turn cyan when overlapping
-    // with the user, and purple buildings turn magenta.
-
-    grass.draw();
-
-    for (Rect &r: buildings3) {
-        if (r.isOverlapping(user)) {
-            r.setColor(magenta);
-        } else {
-            r.setColor(purple);
-        }
-        r.draw();
-    }
-
-    for (Rect &r: buildings2) {
-        if (r.isOverlapping(user)) {
-            r.setColor(cyan);
-        } else {
-            r.setColor(darkBlue);
-        }
-        r.draw();
-    }
-
-    for (Rect &r: buildings1) {
-        if (r.isOverlapping(user)) {
-            r.setColor(orange);
-        } else {
-            r.setColor(brickRed);
-        }
-        r.draw();
-    }
 
     user.draw();
 
@@ -206,53 +102,6 @@ void mouse(int button, int state, int x, int y) {
     glutPostRedisplay();
 }
 
-void buildingTimer(int dummy) {
-    // Smallest buildings move fastest
-    for (int i = 0; i < buildings1.size(); ++i) {
-        // Move all the red buildings to the left
-        buildings1[i].moveX(-3);
-        // If a shape has moved off the screen
-        if (buildings1[i].getCenterX() < -(buildings1[i].getWidth() / 2)) {
-            // Set it to the right of the screen so that it passes through again
-            int buildingOnLeft = (i == 0) ? buildings1.size() - 1 : i - 1;
-            buildings1[i].setCenterX(
-                    buildings1[buildingOnLeft].getCenterX() + buildings1[buildingOnLeft].getWidth() / 2 +
-                    buildings1[i].getWidth() / 2 + 5);
-        }
-    }
-
-    // Medium buildings move slower
-    for (int i = 0; i < buildings2.size(); ++i) {
-        // Move all the red buildings to the left
-        buildings2[i].moveX(-2);
-        // If a shape has moved off the screen
-        if (buildings2[i].getCenterX() < -(buildings2[i].getWidth() / 2)) {
-            // Set it to the right of the screen so that it passes through again
-            int buildingOnLeft = (i == 0) ? buildings2.size() - 1 : i - 1;
-            buildings2[i].setCenterX(
-                    buildings2[buildingOnLeft].getCenterX() + buildings2[buildingOnLeft].getWidth() / 2 +
-                    buildings2[i].getWidth() / 2 + 5);
-        }
-    }
-
-    // Largest buildings move slowest
-    for (int i = 0; i < buildings3.size(); ++i) {
-        // Move all the red buildings to the left
-        buildings3[i].moveX(-1);
-        // If a shape has moved off the screen
-        if (buildings3[i].getCenterX() < -(buildings3[i].getWidth() / 2)) {
-            // Set it to the right of the screen so that it passes through again
-            int buildingOnLeft = (i == 0) ? buildings3.size() - 1 : i - 1;
-            buildings3[i].setCenterX(
-                    buildings3[buildingOnLeft].getCenterX() + buildings3[buildingOnLeft].getWidth() / 2 +
-                    buildings3[i].getWidth() / 2 + 5);
-        }
-    }
-
-    glutPostRedisplay();
-    glutTimerFunc(30, buildingTimer, dummy);
-}
-
 /* Main function: GLUT runs as a console application starting at main()  */
 int main(int argc, char **argv) {
 
@@ -285,9 +134,6 @@ int main(int argc, char **argv) {
 
     // handles mouse click
     glutMouseFunc(mouse);
-
-    // handles timer
-    glutTimerFunc(0, buildingTimer, 0);
 
     // Enter the event-processing loop
     glutMainLoop();
