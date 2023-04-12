@@ -94,6 +94,14 @@ void Shape::setColor(color c) {
     fill = c;
 }
 
+void Shape::swapColor(color c1, color c2) {
+    if (fill == c1) {
+        fill = c2;
+    }else {
+        fill = c1;
+    }
+}
+
 void Shape::setColor(double r, double g, double b, double a) {
     fill = {r, g, b, a};
 }
