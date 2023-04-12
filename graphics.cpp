@@ -44,9 +44,9 @@ void initBoard() {
     for (int y = 0; y < boardHeight; ++y) {
         row.clear();
         squareX = boardX;
-        squareColor = rand() % 2 == 0 ? yellow : grey;
         for (int x = 0; x < boardWidth; ++x) {
-            row.push_back(Rect(yellow, squareX, squareY, dimensions(squareSize, squareSize)));
+            squareColor = rand() % 2 == 0 ? yellow : grey;
+            row.push_back(Rect(squareColor, squareX, squareY, dimensions(squareSize, squareSize)));
             squareX += squareSize + marginSize;
         }
         squareY += squareSize + marginSize;
