@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <chrono>
 
 using namespace std;
 
@@ -10,6 +11,7 @@ enum Screen {
     startScreen, middleScreen, endScreen
 };
 
+// Screen
 Screen visual;
 GLdouble width, height;
 int wd;
@@ -20,9 +22,10 @@ color yellow(1, 1, 0);
 
 // Game variables
 Rect user;
-
-// Board
 vector<vector<Rect>> gameBoard;
+
+// Timer
+chrono::steady_clock::time_point startTime, endTime;
 
 void initUser() {
     // Initialize the user to be a 20x20 white block
@@ -56,12 +59,13 @@ void initBoard() {
 }
 
 void init() {
+    srand(time(0));
     width = 500;
     height = 500;
-    srand(time(0));
     visual = startScreen;
     initUser();
     initBoard();
+    startTime = chrono::steady_clock::now();
 }
 
 /* Initialize OpenGL Graphics */
@@ -182,10 +186,10 @@ void cursor(int x, int y) {
 // state will be GLUT_UP or GLUT_DOWN
 void mouse(int button, int state, int x, int y) {
     for (int i = 0; i < gameBoard.size(); ++i) {
-        for (int j = 0; j < gameBoard.size(); ++j){
-            if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && gameBoard[i][j].isOverlapping(x, y) && gameBoard[i][j].getColor() == yellow) {
+        for (int j = 0; j < gameBoard.size(); ++j) {
+            if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && gameBoard[i][j].isOverlapping(x, y) &&
+                gameBoard[i][j].getColor() == yellow) {
                 gameBoard[i][j].setColor(0.0, 0.0, 0.0, 1);
-
             }
         }
     }
@@ -226,5 +230,9 @@ int main(int argc, char **argv) {
 
     // Enter the event-processing loop
     glutMainLoop();
+
+    endTime = chrono::steady_clock::now();
+    cout << "Elapsed time = " << chrono::duration_cast<chrono::seconds>(endTime - startTime).count() << "seconds."
+         << endl;
     return 0;
 }
