@@ -1,55 +1,41 @@
-# Runner
+# CS 120 Module 4 Applied Project: Lights Out
 
-Keep your head out of the clouds!
+For this project, you will create a C++ graphics program that allows the user to play the game Lights Out.
 
-For this project, you will use C++ graphics with classes to create an interactive runner scene.
+## Requirements
+You can work in a team of 2-4 people for this project.
 
-You may work individually or with a partner of your choosing.
+* Use this template repository to create a **private** GitHub repository in the course organization.
+    * **Your repository must be named with the convention: Lights-Out-netid1-netid2[-netid3-netid4]**, where netid is your UVM NetID username.
+    * Have one team member create the repository and add the other members as collaborators (on GitHub, go to Settings -> Collaborators and Teams, then add the others' GitHub usernames).
 
-Note to Windows users: remember to copy freeglut.dll from the cmake-build-debug folder of the Graphics-Starter activity
-to the cmake-build-debug folder here.
+## Lights Out
+Lights Out was a handheld game in the days of Lisa's childhood. You can play it online here: [https://www.logicgamesonline.com/lightsout/](https://www.logicgamesonline.com/lightsout/).
 
-Note to Mac users: if you are running Catalina, remember to multiply the width and height by 2 in the glViewport line.
+### Base Game
+In its simplest form, the 5x5 grid of lights begins with all of the lights lit. When you click on one of the lights, it toggles itself and the (up to) four lights it borders.
 
-Note to Linux users: remember to use the alternate CMakeLists.txt from the Graphics-Starter activity.
+Here's a gif of the beginning of the game, where the lights have a red outline hover effect:
 
-## Setup
+![Lights-Out-Game-Start.gif](Lights-Out-Game-Start.gif)
 
-Use this Guided Project template to create a new repository (
-see [GitHub-with-CLion](https://github.com/uvmcs120s2023/GitHub-with-CLion) repo for directions).
-**Your repository must be named with the convention: Runner-netid**, where netid is your UVM NetID username.
+When you make all the lights go off, you win the game and can no longer click on the lights:
 
-* If you are collaborating, the format is Runner-netid1-netid2. Have one partner create the repository and give the
-  other partner access on GitHub: on the repository page, go to the Settings tab, choose Manage Access, and add the
-  person with their GitHub username.
+![Lights-Out-Game-End.gif](Lights-Out-Game-End.gif)
 
-Remember to commit and push frequently.
-
-# Requirements
-
-1. Read through the header and .cpp files for Shape, Circle, and Rect.
-    * Note: "Rectangle" is a keyword on some Windows machines, which can cause problems if you also create a data type
-      named Rectangle. Hence the abbreviated name "Rect" for the class.
-    * Note: There are many methods implemented in this project that are not used. These classes are robust with the
-      intention that you use them for open-ended projects.
-1. Implement the methods in Rect.cpp that have TODO comments.
-1. Read through graphics.cpp. Notice the global objects at the top of the file.
-1. Implement the TODO parts of graphics.cpp to initialize and move the rest of the buildings and the user's block.
-1. Run the program. The user block should make the buildings change color when it overlaps with them, and the program
-   should exit when the user block overlaps with a cloud.
+### Added features
+You can add more features to the base game:
+* Start with each light randomly on or off (instead of all of them starting on)
+* Include a start screen with the directions written in text
+* Keep track of the number of lights the user clicks and display it on the screen at all times
+* Record the amount of time it takes the user to finish the game and print it on the end screen
 
 ## Grading
+The project is out of 50 points.
 
-If you are collaborating, both partners have to submit the project.
+| Points Possible | Description of requirement        |
+|-----------------|-----------------------------------|
+| 30 pts          | Base game to match the given gifs |
+| 5 pts each      | Added features listed above       |
 
-### Grading Rubric
-
-- [ ] (2 pts) Implement draw method in the Rect class.
-- [ ] (2 pts) Implement isOverlapping method in the Rect class.
-- [ ] (16 pts) Implement all TODOs in graphics.cpp.
-
-## Notes:
-
-- I chose to have rectangles "overlapping" when they are exactly adjacent to each other (so, <= rather than just <)
-  because this kind of check will be useful for things like game development! Even if tangential rectangles may not be
-  technically "overlapping."
+It is expected that your program will compile, run, and have good style. If your project does not, you may receive point deductions.
