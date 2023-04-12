@@ -106,12 +106,25 @@ void display() {
 
     if (visual == startScreen) {
         //Save the start screen message, then print it
-        string message = "The object of the game is to ensure all lights are off. Turning a light off or"
-                         "on will switch all adjacent squares to the opposite state. Press the spacebar to"
-                         "continue";
+        string message = "The object of the game is to ensure all lights are off.";
+        string messageTwo = "Turning a light off or on will switch all adjacent squares";
+        string messageThree = "to the opposite state Press the space bar to continue";
+        string messageFour = "Press the space bar to continue.";
         glColor3f(1, 1, 1);
-        glRasterPos2i(0, 50);
+        glRasterPos2i(20, 50);
         for (const char &letter: message) {
+            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+        }
+        glRasterPos2i(20, 70);
+        for (const char &letter: messageTwo) {
+            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+        }
+        glRasterPos2i(20, 90);
+        for (const char &letter: messageThree) {
+            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+        }
+        glRasterPos2i(115, 160);
+        for (const char &letter: messageFour) {
             glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
         }
     }
