@@ -22,6 +22,8 @@ color yellow(1, 1, 0);
 
 // Game variables
 vector<vector<Rect>> gameBoard;
+int boardHeight = 5;
+int boardWidth = 5;
 
 // Timer
 chrono::steady_clock::time_point startTime, endTime;
@@ -39,12 +41,12 @@ void initBoard() {
     // Populate the 2D game board vector
     vector<Rect> row;
     color squareColor;
-    for (int y = 0; y < 5; ++y) {
+    for (int y = 0; y < boardHeight; ++y) {
         row.clear();
         squareX = boardX;
-        for (int x = 0; x < 5; ++x) {
-            squareColor = rand() % 2 == 0 ? yellow : grey;
-            row.push_back(Rect(squareColor, squareX, squareY, dimensions(squareSize, squareSize)));
+        squareColor = rand() % 2 == 0 ? yellow : grey;
+        for (int x = 0; x < boardWidth; ++x) {
+            row.push_back(Rect(yellow, squareX, squareY, dimensions(squareSize, squareSize)));
             squareX += squareSize + marginSize;
         }
         squareY += squareSize + marginSize;
@@ -162,18 +164,34 @@ void mouse(int button, int state, int x, int y) {
             if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && gameBoard[i][j].isOverlapping(x, y) &&
                 gameBoard[i][j].getColor() == yellow) {
                 gameBoard[i][j].setColor(grey);
-                gameBoard[i - 1][j].setColor(grey);
-                gameBoard[i][j - 1].setColor(grey);
-                gameBoard[i + 1][j].setColor(grey);
-                gameBoard[i][j + 1].setColor(grey);
+                if (i - 1 >= 0 && i - 1 <= 4) {
+                    gameBoard[i - 1][j].setColor(grey);
+                }
+                if (i + 1 >= 0 && i + 1 <= 4) {
+                    gameBoard[i + 1][j].setColor(grey);
+                }
+                if (j - 1 >= 0 && j - 1 <= 4) {
+                    gameBoard[i][j - 1].setColor(grey);
+                }
+                if (j + 1 >= 0 && j + 1 <= 4) {
+                    gameBoard[i][j + 1].setColor(grey);
+                }
 
             } else if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && gameBoard[i][j].isOverlapping(x, y) &&
                        gameBoard[i][j].getColor() == grey) {
                 gameBoard[i][j].setColor(yellow);
-                gameBoard[i - 1][j].setColor(yellow);
-                gameBoard[i][j - 1].setColor(yellow);
-                gameBoard[i + 1][j].setColor(yellow);
-                gameBoard[i][j + 1].setColor(yellow);
+                if (i - 1 >= 0 && i - 1 <= 4) {
+                    gameBoard[i - 1][j].setColor(yellow);
+                }
+                if (i + 1 >= 0 && i + 1 <= 4) {
+                    gameBoard[i + 1][j].setColor(yellow);
+                }
+                if (j - 1 >= 0 && j - 1 <= 4) {
+                    gameBoard[i][j - 1].setColor(yellow);
+                }
+                if (j + 1 >= 0 && j + 1 <= 4) {
+                    gameBoard[i][j + 1].setColor(yellow);
+                }
             }
         }
     }
