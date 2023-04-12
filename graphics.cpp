@@ -6,6 +6,10 @@
 
 using namespace std;
 
+enum Screen{
+    startScreen,middleScreen,endScreen
+};
+Screen visual;
 GLdouble width, height;
 int wd;
 
@@ -59,6 +63,16 @@ void display() {
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // DO NOT CHANGE THIS LINE
 
+    if(visual == startScreen){
+        //Save the start screen message, then print it
+        string message = "The object of the game is to ensure all lights are off. Turning a light off or"
+                         "on will switch all adjacent squares to the opposite state";
+        glColor3f(1, 1, 1);
+        glRasterPos2i(0, 50);
+        for (const char &letter : message) {
+            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+        }
+    }
     /*
      * Draw here
      */
