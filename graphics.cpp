@@ -6,9 +6,10 @@
 
 using namespace std;
 
-enum Screen{
-    startScreen,middleScreen,endScreen
+enum Screen {
+    startScreen, middleScreen, endScreen
 };
+
 Screen visual;
 GLdouble width, height;
 int wd;
@@ -58,6 +59,7 @@ void init() {
     width = 500;
     height = 500;
     srand(time(0));
+    visual = startScreen;
     initUser();
     initBoard();
 }
@@ -94,6 +96,10 @@ void display() {
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // DO NOT CHANGE THIS LINE
 
+    /*
+    * Draw here
+    */
+
     if (visual == startScreen) {
         //Save the start screen message, then print it
         string message = "The object of the game is to ensure all lights are off. Turning a light off or"
@@ -105,32 +111,29 @@ void display() {
             glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
         }
     }
-    /*
-     * Draw here
-     */
-    if (visual = middleScreen) {
+
+    if (visual == middleScreen) {
         // DRAW THE GAME IN HERE
 
-    drawBoard();
+        drawBoard();
 
-    user.draw();
-
+        user.draw();
 
         // win condition: if loop that switches it to the endScreen
-
     }
 
-    if (visual = endScreen) {
+    if (visual == endScreen) {
         string lastMessage = "You Win!";
         glColor3f(1, 1, 1);
         glRasterPos2i(0, 30);
         for (const char &letter: lastMessage) {
             glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
         }
-
-        glFlush();  // Render now
     }
+
+    glFlush();  // Render now
 }
+
 // http://www.theasciicode.com.ar/ascii-control-characters/escape-ascii-code-27.html
 void kbd(unsigned char key, int x, int y) {
     // escape
@@ -183,7 +186,6 @@ void mouse(int button, int state, int x, int y) {
 
 /* Main function: GLUT runs as a console application starting at main()  */
 int main(int argc, char **argv) {
-
     init();
 
     glutInit(&argc, argv);          // Initialize GLUT
