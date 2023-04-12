@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <chrono>
 
 using namespace std;
 
@@ -10,6 +11,7 @@ enum Screen {
     startScreen, middleScreen, endScreen
 };
 
+// Screen
 Screen visual;
 GLdouble width, height;
 int wd;
@@ -19,19 +21,12 @@ color grey(.5, .5, .5);
 color yellow(1, 1, 0);
 
 // Game variables
-Rect user;
-
-// Board
 vector<vector<Rect>> gameBoard;
 int boardHeight = 5;
 int boardWidth = 5;
 
-void initUser() {
-    // Initialize the user to be a 20x20 white block
-    // centered in the top left corner of the graphics window
-    dimensions userDim = dimensions(20, 20);
-    user = Rect(color(1, 1, 1), 20, 20, userDim);
-}
+// Timer
+chrono::steady_clock::time_point startTime, endTime;
 
 // Creates a 5x5 square grid centered using the width and height of the screen
 void initBoard() {
@@ -58,12 +53,12 @@ void initBoard() {
 }
 
 void init() {
+    srand(time(0));
     width = 500;
     height = 500;
-    srand(time(0));
     visual = startScreen;
-    initUser();
     initBoard();
+    startTime = chrono::steady_clock::now();
 }
 
 /* Initialize OpenGL Graphics */
@@ -119,8 +114,6 @@ void display() {
 
         drawBoard();
 
-        user.draw();
-
         // win condition: if loop that switches it to the endScreen
     }
 
@@ -173,10 +166,6 @@ void kbdS(int key, int x, int y) {
 }
 
 void cursor(int x, int y) {
-    // Sets the user's center point to be the coordinates
-    // passed in as parameters to this function. This will make
-    // the user block move with the mouse.
-    user.setCenter(x, y);
     glutPostRedisplay();
 }
 
@@ -184,8 +173,9 @@ void cursor(int x, int y) {
 // state will be GLUT_UP or GLUT_DOWN
 void mouse(int button, int state, int x, int y) {
     for (int i = 0; i < gameBoard.size(); ++i) {
-        for (int j = 0; j < gameBoard.size(); ++j){
-            if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && gameBoard[i][j].isOverlapping(x, y) && gameBoard[i][j].getColor() == yellow) {
+        for (int j = 0; j < gameBoard.size(); ++j) {
+            if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && gameBoard[i][j].isOverlapping(x, y) &&
+                gameBoard[i][j].getColor() == yellow) {
                 gameBoard[i][j].setColor(grey);
                 if (i - 1 >= 0 && i - 1 <= 4) {
                     gameBoard[i - 1][j].setColor(grey);
@@ -200,7 +190,8 @@ void mouse(int button, int state, int x, int y) {
                     gameBoard[i][j + 1].setColor(grey);
                 }
 
-            }else if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && gameBoard[i][j].isOverlapping(x, y) && gameBoard[i][j].getColor() == grey){
+            } else if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && gameBoard[i][j].isOverlapping(x, y) &&
+                       gameBoard[i][j].getColor() == grey) {
                 gameBoard[i][j].setColor(yellow);
                 if (i - 1 >= 0 && i - 1 <= 4) {
                     gameBoard[i - 1][j].setColor(yellow);
@@ -254,5 +245,9 @@ int main(int argc, char **argv) {
 
     // Enter the event-processing loop
     glutMainLoop();
+
+    endTime = chrono::steady_clock::now();
+    cout << "Elapsed time = " << chrono::duration_cast<chrono::seconds>(endTime - startTime).count() << "seconds."
+         << endl;
     return 0;
 }
