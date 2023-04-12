@@ -76,8 +76,23 @@ void display() {
     /*
      * Draw here
      */
+    if(visual = middleScreen){
+        // DRAW THE GAME IN HERE
 
-    user.draw();
+        user.draw();
+
+
+        // win condition: if loop that switches it to the endScreen
+
+    }
+
+    if(visual = endScreen){
+        string lastMessage = "You Win";
+        glColor3f(1, 1, 1);
+        glRasterPos2i(0, 30);
+        for (const char &letter : lastMessage) {
+            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+    }
 
     glFlush();  // Render now
 }
