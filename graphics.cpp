@@ -10,7 +10,11 @@ using namespace std;
 GLdouble width, height;
 int wd;
 
+// Game variables
 Rect user;
+
+// Board
+vector<vector<int>> gameBoard;
 
 void initUser() {
     // Initialize the user to be a 20x20 white block
@@ -19,11 +23,18 @@ void initUser() {
     user = Rect(color(1, 1, 1), 20, 20, userDim);
 }
 
+void initBoard() {
+    for (int i = 0; i < 5; ++i) {
+        gameBoard.push_back({0, 0, 0, 0, 0});
+    }
+}
+
 void init() {
     width = 500;
     height = 500;
     srand(time(0));
     initUser();
+    initBoard();
 }
 
 /* Initialize OpenGL Graphics */
