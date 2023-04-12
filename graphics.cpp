@@ -1,6 +1,5 @@
 #include "graphics.h"
 #include "Shapes/circle.h"
-#include "cloud.h"
 #include "Shapes/rect.h"
 #include <iostream>
 #include <memory>
@@ -21,21 +20,11 @@ const color magenta(1, 0, 1);
 const color orange(1, 163 / 255.0, 22 / 255.0);
 const color cyan(0, 1, 1);
 
-vector<Cloud> cloudVec;
 Rect grass;
 vector<Rect> buildings1;
 vector<Rect> buildings2;
 vector<Rect> buildings3;
 Rect user;
-
-void initClouds() {
-    cloudVec.clear();
-    // Note: the Rect objects that make up the flat bottom of the clouds
-    // won't appear until you implement the Rect::draw method.
-    cloudVec.push_back(Cloud(white, 315, 100, 100));
-    cloudVec.push_back(Cloud(white, 115, 80, 80));
-    cloudVec.push_back(Cloud(white, 465, 50, 60));
-}
 
 void initGrass() {
     grass.setCenter(250, 450);
@@ -101,7 +90,6 @@ void init() {
     width = 500;
     height = 500;
     srand(time(0));
-    initClouds();
     initGrass();
     initBuildings();
     initUser();
@@ -142,10 +130,6 @@ void display() {
 
     grass.draw();
 
-    for (Cloud &c: cloudVec) {
-        c.draw();
-    }
-
     for (Rect &r: buildings3) {
         if (r.isOverlapping(user)) {
             r.setColor(magenta);
@@ -174,17 +158,6 @@ void display() {
     }
 
     user.draw();
-
-
-
-    // Check if the user is overlapping with the clouds
-    // Note: only checks the Rect object within the cloud
-    for (Cloud &c: cloudVec) {
-        if (c.isOverlapping(user)) {
-            glutDestroyWindow(wd);
-            exit(0);
-        }
-    }
 
     glFlush();  // Render now
 }
@@ -231,15 +204,6 @@ void cursor(int x, int y) {
 // state will be GLUT_UP or GLUT_DOWN
 void mouse(int button, int state, int x, int y) {
     glutPostRedisplay();
-}
-
-void cloudTimer(int dummy) {
-    for (Cloud &c: cloudVec) {
-        c.moveLeftAndJumpX(-1, width);
-    }
-
-    glutPostRedisplay();
-    glutTimerFunc(50, cloudTimer, dummy);
 }
 
 void buildingTimer(int dummy) {
@@ -323,7 +287,6 @@ int main(int argc, char **argv) {
     glutMouseFunc(mouse);
 
     // handles timer
-    glutTimerFunc(0, cloudTimer, 0);
     glutTimerFunc(0, buildingTimer, 0);
 
     // Enter the event-processing loop
