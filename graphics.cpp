@@ -21,18 +21,10 @@ color grey(.5, .5, .5);
 color yellow(1, 1, 0);
 
 // Game variables
-Rect user;
 vector<vector<Rect>> gameBoard;
 
 // Timer
 chrono::steady_clock::time_point startTime, endTime;
-
-void initUser() {
-    // Initialize the user to be a 20x20 white block
-    // centered in the top left corner of the graphics window
-    dimensions userDim = dimensions(20, 20);
-    user = Rect(color(1, 1, 1), 20, 20, userDim);
-}
 
 // Creates a 5x5 square grid centered using the width and height of the screen
 void initBoard() {
@@ -63,7 +55,6 @@ void init() {
     width = 500;
     height = 500;
     visual = startScreen;
-    initUser();
     initBoard();
     startTime = chrono::steady_clock::now();
 }
@@ -121,8 +112,6 @@ void display() {
 
         drawBoard();
 
-        user.draw();
-
         // win condition: if loop that switches it to the endScreen
     }
 
@@ -175,10 +164,6 @@ void kbdS(int key, int x, int y) {
 }
 
 void cursor(int x, int y) {
-    // Sets the user's center point to be the coordinates
-    // passed in as parameters to this function. This will make
-    // the user block move with the mouse.
-    user.setCenter(x, y);
     glutPostRedisplay();
 }
 
@@ -186,15 +171,17 @@ void cursor(int x, int y) {
 // state will be GLUT_UP or GLUT_DOWN
 void mouse(int button, int state, int x, int y) {
     for (int i = 0; i < gameBoard.size(); ++i) {
-        for (int j = 0; j < gameBoard.size(); ++j){
-            if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && gameBoard[i][j].isOverlapping(x, y) && gameBoard[i][j].getColor() == yellow) {
+        for (int j = 0; j < gameBoard.size(); ++j) {
+            if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && gameBoard[i][j].isOverlapping(x, y) &&
+                gameBoard[i][j].getColor() == yellow) {
                 gameBoard[i][j].setColor(grey);
                 gameBoard[i - 1][j].setColor(grey);
                 gameBoard[i][j - 1].setColor(grey);
                 gameBoard[i + 1][j].setColor(grey);
                 gameBoard[i][j + 1].setColor(grey);
 
-            }else if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && gameBoard[i][j].isOverlapping(x, y) && gameBoard[i][j].getColor() == grey){
+            } else if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && gameBoard[i][j].isOverlapping(x, y) &&
+                       gameBoard[i][j].getColor() == grey) {
                 gameBoard[i][j].setColor(yellow);
                 gameBoard[i - 1][j].setColor(yellow);
                 gameBoard[i][j - 1].setColor(yellow);
