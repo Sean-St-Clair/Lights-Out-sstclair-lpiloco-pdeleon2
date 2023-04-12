@@ -186,10 +186,20 @@ void cursor(int x, int y) {
 // state will be GLUT_UP or GLUT_DOWN
 void mouse(int button, int state, int x, int y) {
     for (int i = 0; i < gameBoard.size(); ++i) {
-        for (int j = 0; j < gameBoard.size(); ++j) {
-            if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && gameBoard[i][j].isOverlapping(x, y) &&
-                gameBoard[i][j].getColor() == yellow) {
-                gameBoard[i][j].setColor(0.0, 0.0, 0.0, 1);
+        for (int j = 0; j < gameBoard.size(); ++j){
+            if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && gameBoard[i][j].isOverlapping(x, y) && gameBoard[i][j].getColor() == yellow) {
+                gameBoard[i][j].setColor(grey);
+                gameBoard[i - 1][j].setColor(grey);
+                gameBoard[i][j - 1].setColor(grey);
+                gameBoard[i + 1][j].setColor(grey);
+                gameBoard[i][j + 1].setColor(grey);
+
+            }else if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && gameBoard[i][j].isOverlapping(x, y) && gameBoard[i][j].getColor() == grey){
+                gameBoard[i][j].setColor(yellow);
+                gameBoard[i - 1][j].setColor(yellow);
+                gameBoard[i][j - 1].setColor(yellow);
+                gameBoard[i + 1][j].setColor(yellow);
+                gameBoard[i][j + 1].setColor(yellow);
             }
         }
     }
