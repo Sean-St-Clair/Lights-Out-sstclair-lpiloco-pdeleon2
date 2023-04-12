@@ -6,14 +6,22 @@
 
 using namespace std;
 
+enum Screen{
+    startScreen,middleScreen,endScreen
+};
+Screen visual;
 GLdouble width, height;
 int wd;
+
+// Colors
+color grey(.5, .5, .5);
+color yellow(1, 1, 0);
 
 // Game variables
 Rect user;
 
 // Board
-vector<vector<int>> gameBoard;
+vector<vector<Rect>> gameBoard;
 
 void initUser() {
     // Initialize the user to be a 20x20 white block
@@ -22,9 +30,27 @@ void initUser() {
     user = Rect(color(1, 1, 1), 20, 20, userDim);
 }
 
+// Creates a 5x5 square grid centered using the width and height of the screen
 void initBoard() {
-    for (int i = 0; i < 5; ++i) {
-        gameBoard.push_back({0, 0, 0, 0, 0});
+    int squareSize = width / 6;
+    int marginSize = squareSize / 4;
+    squareSize -= marginSize;
+    int boardX = (width - (squareSize + marginSize) * 4) / 2;
+    int boardY = (height - (squareSize + marginSize) * 4) / 2;
+    int squareX = boardX;
+    int squareY = boardY;
+
+    // Populate the 2D game board vector
+    vector<Rect> row;
+    for (int y = 0; y < 5; ++y) {
+        row.clear();
+        squareX = boardX;
+        for (int x = 0; x < 5; ++x) {
+            row.push_back(Rect(yellow, squareX, squareY, dimensions(squareSize, squareSize)));
+            squareX += squareSize + marginSize;
+        }
+        squareY += squareSize + marginSize;
+        gameBoard.push_back(row);
     }
 }
 
@@ -40,6 +66,15 @@ void init() {
 void initGL() {
     // Set "clearing" or background color
     glClearColor(0, 0, 0, 1.0f);
+}
+
+// TODO: good comments
+void drawBoard() {
+    for (vector<Rect> &row: gameBoard) {
+        for (Rect &r: row) {
+            r.draw();
+        }
+    }
 }
 
 /* Handler for window-repaint event. Call back when the window first appears and
@@ -59,15 +94,43 @@ void display() {
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // DO NOT CHANGE THIS LINE
 
+    if (visual == startScreen) {
+        //Save the start screen message, then print it
+        string message = "The object of the game is to ensure all lights are off. Turning a light off or"
+                         "on will switch all adjacent squares to the opposite state. Press the spacebar to"
+                         "continue";
+        glColor3f(1, 1, 1);
+        glRasterPos2i(0, 50);
+        for (const char &letter: message) {
+            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+        }
+    }
     /*
      * Draw here
      */
+    if (visual = middleScreen) {
+        // DRAW THE GAME IN HERE
+
+    drawBoard();
 
     user.draw();
 
-    glFlush();  // Render now
-}
 
+        // win condition: if loop that switches it to the endScreen
+
+    }
+
+    if (visual = endScreen) {
+        string lastMessage = "You Win!";
+        glColor3f(1, 1, 1);
+        glRasterPos2i(0, 30);
+        for (const char &letter: lastMessage) {
+            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+        }
+
+        glFlush();  // Render now
+    }
+}
 // http://www.theasciicode.com.ar/ascii-control-characters/escape-ascii-code-27.html
 void kbd(unsigned char key, int x, int y) {
     // escape
@@ -76,8 +139,14 @@ void kbd(unsigned char key, int x, int y) {
         exit(0);
     }
 
+    // Allows the start screen to transition to the middle screen with user input
+    if (visual == startScreen && key == ' ') {
+        visual = middleScreen;
+    }
+
     glutPostRedisplay();
 }
+
 
 void kbdS(int key, int x, int y) {
     switch (key) {
