@@ -63,20 +63,21 @@ void display() {
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // DO NOT CHANGE THIS LINE
 
-    if(visual == startScreen){
+    if (visual == startScreen) {
         //Save the start screen message, then print it
         string message = "The object of the game is to ensure all lights are off. Turning a light off or"
-                         "on will switch all adjacent squares to the opposite state";
+                         "on will switch all adjacent squares to the opposite state. Press the spacebar to"
+                         "continue";
         glColor3f(1, 1, 1);
         glRasterPos2i(0, 50);
-        for (const char &letter : message) {
+        for (const char &letter: message) {
             glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
         }
     }
     /*
      * Draw here
      */
-    if(visual = middleScreen){
+    if (visual = middleScreen) {
         // DRAW THE GAME IN HERE
 
         user.draw();
@@ -86,17 +87,17 @@ void display() {
 
     }
 
-    if(visual = endScreen){
-        string lastMessage = "You Win";
+    if (visual = endScreen) {
+        string lastMessage = "You Win!";
         glColor3f(1, 1, 1);
         glRasterPos2i(0, 30);
-        for (const char &letter : lastMessage) {
+        for (const char &letter: lastMessage) {
             glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+        }
+
+        glFlush();  // Render now
     }
-
-    glFlush();  // Render now
 }
-
 // http://www.theasciicode.com.ar/ascii-control-characters/escape-ascii-code-27.html
 void kbd(unsigned char key, int x, int y) {
     // escape
@@ -105,8 +106,14 @@ void kbd(unsigned char key, int x, int y) {
         exit(0);
     }
 
+    // Allows the start screen to transition to the middle screen with user input
+    if (visual == startScreen && key == ' ') {
+        visual = middleScreen;
+    }
+
     glutPostRedisplay();
 }
+
 
 void kbdS(int key, int x, int y) {
     switch (key) {
