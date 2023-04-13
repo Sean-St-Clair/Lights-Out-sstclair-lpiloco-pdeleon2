@@ -50,7 +50,7 @@ void initBoard() {
         row.clear();
         squareX = boardX;
         for (int x = 0; x < boardWidth; ++x) {
-//            squareColor = rand() % 2 == 0 ? yellow : grey;
+            squareColor = rand() % 2 == 0 ? yellow : grey;
             row.push_back(Rect(squareColor, squareX, squareY, dimensions(squareSize, squareSize)));
             squareX += squareSize + marginSize;
         }
@@ -93,6 +93,76 @@ void drawBoard() {
     }
 }
 
+// This is where the instructions for the game are displayed
+void startScreenDisplay() {
+    //Save the start screen message, then print it
+    string message = "The object of the game is to ensure all lights are off.";
+    string messageTwo = "Turning a light off or on will switch all adjacent squares";
+    string messageThree = "to the opposite state Press the space bar to continue";
+    string messageFour = "Press the space bar to continue.";
+    glColor3f(1, 1, 1);
+    glRasterPos2i(20, 50);
+    for (const char &letter: message) {
+        glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+    }
+    glRasterPos2i(20, 70);
+    for (const char &letter: messageTwo) {
+        glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+    }
+    glRasterPos2i(20, 90);
+    for (const char &letter: messageThree) {
+        glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+    }
+    glRasterPos2i(115, 160);
+    for (const char &letter: messageFour) {
+        glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+    }
+}
+
+// This is where the game board and current clicks are displayed
+void middleScreenDisplay() {
+    drawHighlight();
+    drawBoard();
+    string tallyMessage = "Click Tally: " + to_string(clickTally);
+    glColor3f(1, 1, 1);
+    glRasterPos2i(30, 30);
+    for (const char &letter: tallyMessage) {
+        glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+    }
+    int winTally = 0;
+    for (int i = 0; i < gameBoard.size(); ++i) {
+        for (int j = 0; j < gameBoard.size(); ++j) {
+            if (gameBoard[i][j].getColor() == grey) {
+                winTally++;
+            }
+        }
+    }
+    if (winTally == 25) {
+        visual = endScreen;
+        seconds = chrono::duration_cast<chrono::seconds>(chrono::steady_clock::now() - startTime).count();
+    }
+}
+
+// Displays end message after game is won
+void endScreenDisplay() {
+    string lastMessage = "You Win!";
+    string timerMessage = "Time Elapsed: " + to_string(seconds) + " seconds!";
+    glColor3f(1, 1, 1);
+    glRasterPos2i(140, 160);
+    for (const char &letter: lastMessage) {
+        glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+    }
+    string tallyMessage = "Click Tally: " + to_string(clickTally);
+    glRasterPos2i(140, 180);
+    for (const char &letter: tallyMessage) {
+        glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+    }
+    glRasterPos2i(140, 200);
+    for (const char &letter: timerMessage) {
+        glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+    }
+}
+
 /* Handler for window-repaint event. Call back when the window first appears and
  whenever the window needs to be re-painted. */
 void display() {
@@ -115,62 +185,11 @@ void display() {
     */
 
     if (visual == startScreen) {
-        //Save the start screen message, then print it
-        string message = "The object of the game is to ensure all lights are off.";
-        string messageTwo = "Turning a light off or on will switch all adjacent squares";
-        string messageThree = "to the opposite state Press the space bar to continue";
-        string messageFour = "Press the space bar to continue.";
-        glColor3f(1, 1, 1);
-        glRasterPos2i(20, 50);
-        for (const char &letter: message) {
-            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
-        }
-        glRasterPos2i(20, 70);
-        for (const char &letter: messageTwo) {
-            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
-        }
-        glRasterPos2i(20, 90);
-        for (const char &letter: messageThree) {
-            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
-        }
-        glRasterPos2i(115, 160);
-        for (const char &letter: messageFour) {
-            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
-        }
+        startScreenDisplay();
     } else if (visual == middleScreen) {
-        // Game is drawn in here
-        drawHighlight();
-        drawBoard();
-        string tallyMessage = "Click Tally: " + to_string(clickTally);
-        glColor3f(1, 1, 1);
-        glRasterPos2i(0, 30);
-        for (const char &letter: tallyMessage) {
-            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
-        }
-        int winTally = 0;
-        for (int i = 0; i < gameBoard.size(); ++i) {
-            for (int j = 0; j < gameBoard.size(); ++j) {
-                if (gameBoard[i][j].getColor() == grey) {
-                    winTally++;
-                }
-            }
-        }
-        if (winTally == 25) {
-            visual = endScreen;
-            seconds = chrono::duration_cast<chrono::seconds>(chrono::steady_clock::now() - startTime).count();
-        }
+        middleScreenDisplay();
     } else if (visual == endScreen) {
-        string lastMessage = "You Win!";
-        string timerMessage = "Time Elapsed: " + to_string(seconds) + " seconds!";
-        glColor3f(1, 1, 1);
-        glRasterPos2i(140, 160);
-        for (const char &letter: lastMessage) {
-            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
-        }
-        glRasterPos2i(140, 180);
-        for (const char &letter: timerMessage) {
-            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
-        }
+        endScreenDisplay();
     }
 
     glFlush();  // Render now
@@ -242,7 +261,6 @@ void mouse(int button, int state, int x, int y) {
             }
         }
     }
-
 }
 
 /* Main function: GLUT runs as a console application starting at main()  */
@@ -254,7 +272,8 @@ int main(int argc, char **argv) {
     glutInitDisplayMode(GLUT_RGBA);
 
     glutInitWindowSize((int) width, (int) height);
-    glutInitWindowPosition(100, 200); // Position the window's initial top-left corner
+    glutInitWindowPosition((glutGet(GLUT_SCREEN_WIDTH) - width) / 2,
+                           (glutGet(GLUT_SCREEN_HEIGHT) - height) / 2); // Position the window's initial top-left corner
     /* create the window and store the handle to it */
     wd = glutCreateWindow("Runner" /* title */ );
 
