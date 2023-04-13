@@ -159,7 +159,7 @@ void display() {
     } else if (visual == endScreen) {
         string lastMessage = "You Win!";
         glColor3f(1, 1, 1);
-        glRasterPos2i(115, 160);
+        glRasterPos2i(140, 160);
         for (const char &letter: lastMessage) {
             glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
         }
