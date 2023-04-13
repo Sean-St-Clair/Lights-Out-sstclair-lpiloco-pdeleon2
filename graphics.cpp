@@ -30,7 +30,8 @@ int clickTally = 0;
 Rect highlight;
 
 // Timer
-chrono::steady_clock::time_point startTime, elapsedTime;
+chrono::steady_clock::time_point startTime;
+int seconds;
 
 // Creates a 5x5 square grid centered using the width and height of the screen
 void initBoard() {
@@ -44,12 +45,12 @@ void initBoard() {
 
     // Populate the 2D game board vector
     vector<Rect> row;
-    color squareColor;
+    color squareColor = yellow;
     for (int y = 0; y < boardHeight; ++y) {
         row.clear();
         squareX = boardX;
         for (int x = 0; x < boardWidth; ++x) {
-            squareColor = rand() % 2 == 0 ? yellow : grey;
+//            squareColor = rand() % 2 == 0 ? yellow : grey;
             row.push_back(Rect(squareColor, squareX, squareY, dimensions(squareSize, squareSize)));
             squareX += squareSize + marginSize;
         }
@@ -69,6 +70,7 @@ void init() {
     visual = startScreen;
     initBoard();
     startTime = chrono::steady_clock::now();
+    seconds = 0;
 }
 
 /* Initialize OpenGL Graphics */
@@ -155,12 +157,18 @@ void display() {
         }
         if (winTally == 25) {
             visual = endScreen;
+            seconds = chrono::duration_cast<chrono::seconds>(chrono::steady_clock::now() - startTime).count();
         }
     } else if (visual == endScreen) {
         string lastMessage = "You Win!";
+        string timerMessage = "Time Elapsed: " + to_string(seconds);
         glColor3f(1, 1, 1);
         glRasterPos2i(115, 160);
         for (const char &letter: lastMessage) {
+            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+        }
+        glRasterPos2i(115, 180);
+        for (const char &letter: timerMessage) {
             glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
         }
     }
@@ -271,9 +279,5 @@ int main(int argc, char **argv) {
 
     // Enter the event-processing loop
     glutMainLoop();
-
-//    endTime = chrono::steady_clock::now();
-//    cout << "Elapsed time = " << chrono::duration_cast<chrono::seconds>(endTime - startTime).count() << "seconds."
-//         << endl;
     return 0;
 }
