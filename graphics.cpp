@@ -19,14 +19,17 @@ int wd;
 // Colors
 color grey(.5, .5, .5);
 color yellow(1, 1, 0);
+color red(1, 0, 0);
+color black(0, 0, 0);
 
 // Game variables
 vector<vector<Rect>> gameBoard;
 int boardHeight = 5;
 int boardWidth = 5;
+Rect highlight;
 
 // Timer
-chrono::steady_clock::time_point startTime, endTime;
+chrono::steady_clock::time_point startTime, elapsedTime;
 
 // Creates a 5x5 square grid centered using the width and height of the screen
 void initBoard() {
@@ -52,6 +55,10 @@ void initBoard() {
         squareY += squareSize + marginSize;
         gameBoard.push_back(row);
     }
+
+    // Init highlight rect
+    double highlightSize = squareSize + marginSize / 2;
+    highlight = Rect(black, 0, 0, dimensions(highlightSize, highlightSize));
 }
 
 void init() {
@@ -67,6 +74,11 @@ void init() {
 void initGL() {
     // Set "clearing" or background color
     glClearColor(0, 0, 0, 1.0f);
+}
+
+// Draws a red box around hovered square
+void drawHighlight() {
+    highlight.draw();
 }
 
 // Draws each rectangle of the game board
@@ -122,6 +134,9 @@ void display() {
         for (const char &letter: messageFour) {
             glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
         }
+    } else if (visual == middleScreen) {
+        // Draws the game in here
+        drawHighlight();
     }
 
     if (visual == middleScreen) {
@@ -140,6 +155,7 @@ void display() {
         }
         glutPostRedisplay();
         // win condition: if loop that switches it to the endScreen
+    } else if (visual == endScreen) {
 
     }
 
@@ -177,12 +193,30 @@ void kbdS(int key, int x, int y) {
 }
 
 void cursor(int x, int y) {
+    // Highlight is invisible on the black background to start
+    highlight.setColor(black);
+    // Iterates through game board to see if cursor is hovering over any square
+    for (int i = 0; i < gameBoard.size(); ++i) {
+        for (int j = 0; j < gameBoard.size(); ++j) {
+            if (gameBoard[i][j].isOverlapping(x, y)) {
+                // If cursor is overlapping a square, make the highlight visible at that square
+                highlight.setColor(red);
+                highlight.setCenter(gameBoard[i][j].getCenter());
+            }
+        }
+    }
     glutPostRedisplay();
 }
 
 // button will be GLUT_LEFT_BUTTON or GLUT_RIGHT_BUTTON
 // state will be GLUT_UP or GLUT_DOWN
 void mouse(int button, int state, int x, int y) {
+    // Only detect mouse input on middleScreen
+    if (visual != middleScreen) {
+        glutPostRedisplay();
+        return;
+    }
+
     for (int i = 0; i < gameBoard.size(); ++i) {
         for (int j = 0; j < gameBoard.size(); ++j) {
             if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && gameBoard[i][j].isOverlapping(x, y)) {
@@ -240,8 +274,8 @@ int main(int argc, char **argv) {
     // Enter the event-processing loop
     glutMainLoop();
 
-    endTime = chrono::steady_clock::now();
-    cout << "Elapsed time = " << chrono::duration_cast<chrono::seconds>(endTime - startTime).count() << "seconds."
-         << endl;
+//    endTime = chrono::steady_clock::now();
+//    cout << "Elapsed time = " << chrono::duration_cast<chrono::seconds>(endTime - startTime).count() << "seconds."
+//         << endl;
     return 0;
 }
