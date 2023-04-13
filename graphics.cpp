@@ -139,6 +139,8 @@ void display() {
         // Game is drawn in here
         drawHighlight();
         drawBoard();
+
+        // Display clickTally
         string tallyMessage = "Click Tally: " + to_string(clickTally);
         glColor3f(1, 1, 1);
         glRasterPos2i(0, 30);
@@ -214,10 +216,13 @@ void mouse(int button, int state, int x, int y) {
         return;
     }
 
+    // Loop through the array of squares and check if one is clicked.
     for (int i = 0; i < gameBoard.size(); ++i) {
         for (int j = 0; j < gameBoard[0].size(); ++j) {
             if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && gameBoard[i][j].isOverlapping(x, y)) {
+                // Swap the colors of the clicked square and all adjacent squares
                 gameBoard[i][j].swapColor(grey, yellow);
+                // Makes sure each adjacent square is withing the bounds of the board before trying to swap colors
                 if (i - 1 >= 0 && i - 1 <= 4) {
                     gameBoard[i - 1][j].swapColor(grey, yellow);
                 }
@@ -230,6 +235,7 @@ void mouse(int button, int state, int x, int y) {
                 if (j + 1 >= 0 && j + 1 <= 4) {
                     gameBoard[i][j + 1].swapColor(grey, yellow);
                 }
+                // Increment clickTally
                 ++clickTally;
             }
         }
