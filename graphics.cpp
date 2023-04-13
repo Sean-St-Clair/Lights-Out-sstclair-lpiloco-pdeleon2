@@ -163,7 +163,7 @@ void display() {
         string lastMessage = "You Win!";
         string timerMessage = "Time Elapsed: " + to_string(seconds);
         glColor3f(1, 1, 1);
-        glRasterPos2i(115, 160);
+        glRasterPos2i(140, 160);
         for (const char &letter: lastMessage) {
             glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
         }
