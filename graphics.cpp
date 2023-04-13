@@ -185,7 +185,7 @@ void cursor(int x, int y) {
     highlight.setColor(black);
     // Iterates through game board to see if cursor is hovering over any square
     for (int i = 0; i < gameBoard.size(); ++i) {
-        for (int j = 0; j < gameBoard.size(); ++j) {
+        for (int j = 0; j < gameBoard[0].size(); ++j) {
             if (gameBoard[i][j].isOverlapping(x, y)) {
                 // If cursor is overlapping a square, make the highlight visible at that square
                 highlight.setColor(red);
@@ -206,7 +206,7 @@ void mouse(int button, int state, int x, int y) {
     }
 
     for (int i = 0; i < gameBoard.size(); ++i) {
-        for (int j = 0; j < gameBoard.size(); ++j) {
+        for (int j = 0; j < gameBoard[0].size(); ++j) {
             if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && gameBoard[i][j].isOverlapping(x, y)) {
                 gameBoard[i][j].swapColor(grey, yellow);
                 if (i - 1 >= 0 && i - 1 <= 4) {
