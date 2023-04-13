@@ -26,6 +26,7 @@ color black(0, 0, 0);
 vector<vector<Rect>> gameBoard;
 int boardHeight = 5;
 int boardWidth = 5;
+int clickTally = 0;
 Rect highlight;
 
 // Timer
@@ -142,6 +143,13 @@ void display() {
     if (visual == middleScreen) {
         // DRAW THE GAME IN HERE
         drawBoard();
+        string tallyMessage = "Click Tally: " + to_string(clickTally);
+        glColor3f(1, 1, 1);
+        glRasterPos2i(0, 30);
+        for (const char &letter: tallyMessage) {
+            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+        }
+
         int winTally = 0;
         for (int i = 0; i < gameBoard.size(); ++i) {
             for (int j = 0; j < gameBoard.size(); ++j) {
@@ -197,7 +205,7 @@ void cursor(int x, int y) {
     highlight.setColor(black);
     // Iterates through game board to see if cursor is hovering over any square
     for (int i = 0; i < gameBoard.size(); ++i) {
-        for (int j = 0; j < gameBoard.size(); ++j) {
+        for (int j = 0; j < gameBoard[0].size(); ++j) {
             if (gameBoard[i][j].isOverlapping(x, y)) {
                 // If cursor is overlapping a square, make the highlight visible at that square
                 highlight.setColor(red);
@@ -218,7 +226,7 @@ void mouse(int button, int state, int x, int y) {
     }
 
     for (int i = 0; i < gameBoard.size(); ++i) {
-        for (int j = 0; j < gameBoard.size(); ++j) {
+        for (int j = 0; j < gameBoard[0].size(); ++j) {
             if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && gameBoard[i][j].isOverlapping(x, y)) {
                 gameBoard[i][j].swapColor(grey, yellow);
                 if (i - 1 >= 0 && i - 1 <= 4) {
@@ -233,6 +241,7 @@ void mouse(int button, int state, int x, int y) {
                 if (j + 1 >= 0 && j + 1 <= 4) {
                     gameBoard[i][j + 1].swapColor(grey, yellow);
                 }
+                ++clickTally;
             }
         }
     }
