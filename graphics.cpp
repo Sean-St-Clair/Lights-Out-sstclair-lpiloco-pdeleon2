@@ -7,6 +7,7 @@
 
 using namespace std;
 
+// Create the enum object
 enum Screen {
     startScreen, middleScreen, endScreen
 };
@@ -204,6 +205,7 @@ void kbd(unsigned char key, int x, int y) {
     }
 
     // Allows the start screen to transition to the middle screen with user input
+    // In this case a space bar
     if (visual == startScreen && key == ' ') {
         visual = middleScreen;
     }
@@ -298,5 +300,6 @@ int main(int argc, char **argv) {
 
     // Enter the event-processing loop
     glutMainLoop();
+
     return 0;
 }
