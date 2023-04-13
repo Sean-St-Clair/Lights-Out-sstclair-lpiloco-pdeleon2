@@ -34,7 +34,7 @@ chrono::steady_clock::time_point startTime, elapsedTime;
 // Creates a 5x5 square grid centered using the width and height of the screen
 void initBoard() {
     double squareSize = width / 6;
-    double marginSize = squareSize / 4;
+    double marginSize = squareSize / 5;
     squareSize -= marginSize;
     double boardX = (width - (squareSize + marginSize) * 4) / 2;
     double boardY = (height - (squareSize + marginSize) * 4) / 2;
