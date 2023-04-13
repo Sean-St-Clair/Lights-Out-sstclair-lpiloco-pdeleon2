@@ -7,6 +7,7 @@
 
 using namespace std;
 
+// Create the enum object
 enum Screen {
     startScreen, middleScreen, endScreen
 };
@@ -70,7 +71,6 @@ void init() {
     visual = startScreen;
     initBoard();
     startTime = chrono::steady_clock::now();
-    seconds = 0;
 }
 
 /* Initialize OpenGL Graphics */
@@ -110,12 +110,10 @@ void display() {
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // DO NOT CHANGE THIS LINE
 
-    /*
-    * Draw here
-    */
 
     if (visual == startScreen) {
-        //Save the start screen message, then print it
+        // Save the start screen message, then print it
+        // Split into different chunks so that it fits onto the display
         string message = "The object of the game is to ensure all lights are off.";
         string messageTwo = "Turning a light off or on will switch all adjacent squares";
         string messageThree = "to the opposite state Press the space bar to continue";
@@ -139,6 +137,7 @@ void display() {
         }
     } else if (visual == middleScreen) {
         // Game is drawn in here
+        // So are the highlights
         drawHighlight();
         drawBoard();
         string tallyMessage = "Click Tally: " + to_string(clickTally);
@@ -147,6 +146,8 @@ void display() {
         for (const char &letter: tallyMessage) {
             glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
         }
+        // The win condition. Use an iterator and search through the vector of squares
+        // Once it hits 25 gray squares, switch the enum to the end screen
         int winTally = 0;
         for (int i = 0; i < gameBoard.size(); ++i) {
             for (int j = 0; j < gameBoard.size(); ++j) {
@@ -159,6 +160,7 @@ void display() {
             visual = endScreen;
             seconds = chrono::duration_cast<chrono::seconds>(chrono::steady_clock::now() - startTime).count();
         }
+        // Save the win message and save it
     } else if (visual == endScreen) {
         string lastMessage = "You Win!";
         string timerMessage = "Time Elapsed: " + to_string(seconds) + " seconds!";
@@ -176,7 +178,7 @@ void display() {
     glFlush();  // Render now
 }
 
-// http://www.theasciicode.com.ar/ascii-control-characters/escape-ascii-code-27.html
+
 void kbd(unsigned char key, int x, int y) {
     // escape
     if (key == 27) {
@@ -185,6 +187,7 @@ void kbd(unsigned char key, int x, int y) {
     }
 
     // Allows the start screen to transition to the middle screen with user input
+    // In this case a space bar
     if (visual == startScreen && key == ' ') {
         visual = middleScreen;
     }
@@ -279,5 +282,6 @@ int main(int argc, char **argv) {
 
     // Enter the event-processing loop
     glutMainLoop();
+
     return 0;
 }
