@@ -136,12 +136,8 @@ void display() {
             glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
         }
     } else if (visual == middleScreen) {
-        // Draws the game in here
+        // Game is drawn in here
         drawHighlight();
-    }
-
-    if (visual == middleScreen) {
-        // DRAW THE GAME IN HERE
         drawBoard();
         string tallyMessage = "Click Tally: " + to_string(clickTally);
         glColor3f(1, 1, 1);
@@ -149,11 +145,10 @@ void display() {
         for (const char &letter: tallyMessage) {
             glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
         }
-
         int winTally = 0;
         for (int i = 0; i < gameBoard.size(); ++i) {
             for (int j = 0; j < gameBoard.size(); ++j) {
-                if(gameBoard[i][j].getColor() == grey){
+                if (gameBoard[i][j].getColor() == grey) {
                     winTally++;
                 }
             }
@@ -161,13 +156,7 @@ void display() {
         if (winTally == 25) {
             visual = endScreen;
         }
-        glutPostRedisplay();
-        // win condition: if loop that switches it to the endScreen
     } else if (visual == endScreen) {
-
-    }
-
-    if (visual == endScreen) {
         string lastMessage = "You Win!";
         glColor3f(1, 1, 1);
         glRasterPos2i(115, 160);
