@@ -24,6 +24,7 @@ color yellow(1, 1, 0);
 vector<vector<Rect>> gameBoard;
 int boardHeight = 5;
 int boardWidth = 5;
+int clickTally = 0;
 
 // Timer
 chrono::steady_clock::time_point startTime, endTime;
@@ -128,6 +129,12 @@ void display() {
         // DRAW THE GAME IN HERE
 
         drawBoard();
+        string tallyMessage = "Click Tally: " + to_string(clickTally);
+        glColor3f(1, 1, 1);
+        glRasterPos2i(0, 30);
+        for (const char &letter: tallyMessage) {
+            glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
+        }
 
         // win condition: if loop that switches it to the endScreen
     }
@@ -188,6 +195,7 @@ void mouse(int button, int state, int x, int y) {
                 if (j + 1 >= 0 && j + 1 <= 4) {
                     gameBoard[i][j + 1].swapColor(grey, yellow);
                 }
+                ++clickTally;
             }
         }
     }
