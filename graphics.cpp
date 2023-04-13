@@ -126,16 +126,27 @@ void display() {
 
     if (visual == middleScreen) {
         // DRAW THE GAME IN HERE
-
         drawBoard();
-
+        int winTally = 0;
+        for (int i = 0; i < gameBoard.size(); ++i) {
+            for (int j = 0; j < gameBoard.size(); ++j) {
+                if(gameBoard[i][j].getColor() == grey){
+                    winTally++;
+                }
+            }
+        }
+        if (winTally == 25) {
+            visual = endScreen;
+        }
+        glutPostRedisplay();
         // win condition: if loop that switches it to the endScreen
+
     }
 
     if (visual == endScreen) {
         string lastMessage = "You Win!";
         glColor3f(1, 1, 1);
-        glRasterPos2i(0, 30);
+        glRasterPos2i(115, 160);
         for (const char &letter: lastMessage) {
             glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
         }
@@ -191,7 +202,7 @@ void mouse(int button, int state, int x, int y) {
             }
         }
     }
-    glutPostRedisplay();
+
 }
 
 /* Main function: GLUT runs as a console application starting at main()  */
