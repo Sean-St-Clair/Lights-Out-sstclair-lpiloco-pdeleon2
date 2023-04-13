@@ -161,13 +161,13 @@ void display() {
         }
     } else if (visual == endScreen) {
         string lastMessage = "You Win!";
-        string timerMessage = "Time Elapsed: " + to_string(seconds);
+        string timerMessage = "Time Elapsed: " + to_string(seconds) + " seconds!";
         glColor3f(1, 1, 1);
         glRasterPos2i(140, 160);
         for (const char &letter: lastMessage) {
             glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
         }
-        glRasterPos2i(115, 180);
+        glRasterPos2i(140, 180);
         for (const char &letter: timerMessage) {
             glutBitmapCharacter(GLUT_BITMAP_8_BY_13, letter);
         }
